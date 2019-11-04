@@ -9,9 +9,74 @@
 <body>
 	<div id="container">
 		<nav>
-		this is nav bar
+  			<a id="create" href="#"><div>New</div></a>
+ 			<a id="update" href="#"><div>Update</div></a>
+ 			<a id="delete" href="#"><div>Delete</div></a>
+ 			 
 		</nav>
-		
+
+		<div id ="searchBar">
+			<input type="text" id="searchInput" placeholder="last name or phone number">
+			<button id="searchBtn">search</button>
+		</div><br>
+
+		<div id ="patientSheet">
+			<div id="readings">
+
+				<label>Right</label>
+				<table id="rightTbale">
+					<tr>
+						<th>SPH </th>
+						<th>CYL </th>
+						<th>AX </th>
+						<th>PD </th>
+						<th>Addation</th>
+					</tr>
+					<tr>
+						<td><input id ="R-SPH"></td>
+						<td><input id ="R-CYL"></td>
+						<td><input id ="R-AX"></td>
+						<td><input id ="R-PD"></td>
+						<td><input id ="R-Addition"></td>
+
+					</tr>
+
+				</table> </div><br>
+
+
+				<label>Left</label>
+				<table id="leftTbale">
+					<tr>
+						<th>SPH </th>
+						<th>CYL </th>
+						<th>AX </th>
+						<th>PD </th>
+						<th>Addation</th>
+
+					</tr>
+					<tr> 
+						<td><input id ="L-SPH"></td>
+						<td><input id ="L-CYL"></td>
+						<td><input id ="L-AX"></td>
+						<td><input id ="L-PD"></td>
+						<td><input id ="L-Addition"></td>
+
+					</tr>
+				</table><br>
+				<label>Rx date</label>
+				<input type="date" id="RxDate">
+				<hr>
+			</div>
+			<div id="details" >
+				<div id="firstName"><label>firstname</label> <input id="firstNameInput" type="text"></div>
+				<div id="lastName"><label>lastname</label> <input id="lastNameInput" type="text"></div>
+				<div id="dateOfBirth"><label>date of birth</label> <input id="dateOfBirthInput" type="date"></div>
+				<div id="phoneNumber"><label>phone number</label><input id="phoneNumberInput" type="tel"></div>
+				<div id="email"></div>
+			</div>
+			<a id ="save"  href="#save"><div>Save</div></a>
+		</div>
+
 	</div>
 
 
