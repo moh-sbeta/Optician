@@ -1,35 +1,12 @@
-var clients = [
-{info:{
-		firstName: "xxx",
-		lastName: "xxx",
-		dateOfbirth: "xxx",
-		phoneNo: "xxx",
-		eMail: "xxx",
-	},
-	right: {
-		sph: "xxx1",
-		cyl: "xxx1",
-		ax: "xxx1",
-		pd: "xxx1",
-		add: "xxx1"
-	},
-	left: {
-		sph: "xxx",
-		cyl: "xxx",
-		ax: "xxx",
-		pd: "xxx",
-		add: "xxx"
-	},
-	dateRx: "xxx" }
-]
+// the random function that we used to generate data
 var random = function random(type){
 	return function(max){
 
 		switch (type) {
-			case "percentage":
-				return Math.floor(Math.random() * max) +" %" // to get percentage insite our data 
+			case "deg":
+				return Math.floor(Math.random() * max) +" °" // to get percentage insite our data 
 			case " digit":
-				return Math.floor(Math.random() * max) +" %" // to get percentage insite our data 
+				return Math.random() * max  // to get percentage insite our data 
 	
 			default:
 					return Math.floor(Math.random() * max) // basic case number 
@@ -54,7 +31,7 @@ var randomEmail = function(){
 }
 var randomDate = function (){
 	var month = random()(13)
-	var monthTab = [1,3,5,7,8,10,12] // index month
+	var monthTab = [1,3,5,7,8,10,12] // index month 31 day
 	var years = 1919 + random()(100) // to start from min of 1919
 	if(month === 2){
 		return  random()(30) + " / " + month +" / "+ years // to generate  correct number of feb month 
@@ -79,7 +56,7 @@ var dataObj = function (objName,attr){
 
 	return obj
 }
-var attrInfo = {
+/*var attrInfo = {
 	"first Name": randomUserFirstName() ,
 	"lastName"	:randomUserLastName() , 
 	"email"	:randomEmail() ,
@@ -90,17 +67,17 @@ var attrInfo = {
 var eyes = {
 	"SPH" : random("number")(20),
 	"CYL" : random("number")(20) ,
-	"AXIS": random("percentage")(20),
+	"AXIS": random("deg")(20),
 	"PD"  :	random("number")(20),
 	"ADD" : random("number")(20)
 }
 var leftObj  = dataObj("left",eyes)
 var rightObj = dataObj("right",eyes)
-var userInfo = dataObj("info",attrInfo) // we can add user id
+var userInfo = dataObj("info",attrInfo) // we can add user id */
 
-var rowObj = { "info": userInfo["info"] , "right":rightObj["right"] ,"left": leftObj["left"] }
+// var rowObj = { "info": userInfo["info"] , "right":rightObj["right"] ,"left": leftObj["left"] }
 
-var data = function() {
+var generateData = function() {
 	var result = []
 	for (var i = 0 ; i< 10 ; i++ ){
 		var attrInfo = {
@@ -109,21 +86,30 @@ var data = function() {
 			"email"	:randomEmail() ,
 			"date"	: randomDate() 
 		}
-		var eyes = {
-			"SPH" : random("number")(20),
-			"CYL" : random("number")(20) ,
-			"AXIS": random("percentage")(20),
-			"PD"  :	random("number")(20),
-			"ADD" : random("number")(20)
+		var left = {
+			"SPH" : random("number")(20), // +20.00 to -35.00
+			"CYL" : random("number")(6),// +6.00 to -6.00
+			"AXIS": random("deg")(180), // deg
+			"PD"  :	random("number")(40), // from 25 to 40
+			"ADD" : random("number")(5) // 0 +4 // degit 0.00 to 4.00
 		}
-		var leftObj  = dataObj("left",eyes)
-		var rightObj = dataObj("right",eyes)
+		var right = {
+			"SPH" : random("number")(20),
+			"CYL" : random("number")(6) ,
+			"AXIS": random("deg")(180),
+			"PD"  :	random("number")(20),
+			"ADD" : random("number")(5)
+		}
+		var leftObj  = dataObj("left",left)
+		var rightObj = dataObj("right",right)
 		var userInfo = dataObj("info",attrInfo)
 		var rowObj = { "info": userInfo["info"] , "right":rightObj["right"] ,"left": leftObj["left"] }
 		result.push(rowObj)
 	}
 	return result
 }
+
+var data = generateData()
 
 $('a#create').click(function(){
 	//$('a#create').css('display','contents')
