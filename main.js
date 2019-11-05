@@ -42,8 +42,6 @@ var randomDate = function (){
 	return  random()(31) + " / " + month +" / "+ years // to generate max coorect number of month that hold 30 days
 }
 
-// the data generator function retun an object that will uses our keys right and left data 
-//var attr = ["SPH","CYL","AXIS","PD","ADD"]
 
 var dataObj = function (objName,attr){
 
@@ -54,37 +52,17 @@ var dataObj = function (objName,attr){
 		obj[objName][key] = attr[key]
 	}
 
-	return obj
+	return obj //row genertaor 
 }
-/*var attrInfo = {
-	"first Name": randomUserFirstName() ,
-	"lastName"	:randomUserLastName() , 
-	"email"	:randomEmail() ,
-	"date"	: randomDate() 
-}
-
-
-var eyes = {
-	"SPH" : random("number")(20),
-	"CYL" : random("number")(20) ,
-	"AXIS": random("deg")(20),
-	"PD"  :	random("number")(20),
-	"ADD" : random("number")(20)
-}
-var leftObj  = dataObj("left",eyes)
-var rightObj = dataObj("right",eyes)
-var userInfo = dataObj("info",attrInfo) // we can add user id */
-
-// var rowObj = { "info": userInfo["info"] , "right":rightObj["right"] ,"left": leftObj["left"] }
-
 var generateData = function() {
 	var result = []
 	for (var i = 0 ; i< 10 ; i++ ){
 		var attrInfo = {
 			"first Name": randomUserFirstName() ,
 			"lastName"	:randomUserLastName() , 
-			"email"	:randomEmail() ,
-			"date"	: randomDate() 
+			"email"		:randomEmail() ,
+			"date"		: randomDate(),
+			"phoneNo"	: random()(10000000000),
 		}
 		var left = {
 			"SPH" : random("number")(20), // +20.00 to -35.00
@@ -109,62 +87,119 @@ var generateData = function() {
 	return result
 }
 
-var data = generateData()
+var tabData = generateData()
 
 $('a#create').click(function(){
-	//$('a#create').css('display','contents')
+	$('#save').show()
 	$('div#details').show();
 	$('div#patientSheet').show();
+	$('div#listClient').remove(); // to remove the client list
 
+	//console.log(tabData) // test
 })
 
 $('a#save').click(function() {
-
-	// todo : push the new inputs to data variable or obj !!
+	var searchItem = $('#searchInput').val();
+	$('body').append('<div id="savedMessage">Data saved</div>');
 	$('div#patientSheet').hide();
 	$('div#details').hide();
-	$('body').append('<div id="savedMessage">Data saved</div>');
+	
+
 	setTimeout(function() {
 		$('div#savedMessage').remove();
-	},3*1000);
-})
+	},2500);
 
-$('a#update').click(function() {
-	// if statement : if the client already existes : search whether the client exists or not
-	
-	$('div#details').show();
-	$('div#patientSheet').show();
+		var firstNameUpdated   = $('#firstNameInput').val()
+		var lastNameUpdated    = $('#lastNameInput').val()
+		var dateOfBirthUpdated = $('#dateOfBirthInput').val()
+		var phoneNumberUpdated = $('#phoneNumberInput').val() // add to data 
+		var emailUpdated 	   = $('#emailInput').val()
+
+		var RSPHUpdated =	$('#R-SPH').val()
+		var RCYLUpdated =	$('#R-CYL').val()
+		var RAXUpdated =	$('#R-AX').val()
+		var RPDUpdated =	$('#R-PD').val()
+		var RAddUpdated =	$('#R-Addition').val()
+
+		var LSPHUpdated =	$('#L-SPH').val()
+		var LCYLUpdated =	$('#L-CYL').val()
+		var LAXUpdated =	$('#L-AX').val()
+		var LPDUpdated =	$('#L-PD').val()
+		var LAddUpdated =	$('#L-Addition').val()
+
+
+		/*var indexRow= search(tabData,searchItem)
+		var row = tabData[indexRow]*/
+
+		var obj = { "info": {"first Name": firstNameUpdated ,"lastName": lastNameUpdated,"email":emailUpdated,"date":dateOfBirthUpdated,"phoneNo": phoneNumberUpdated} ,
+	 				"right":{"SPH": RSPHUpdated, "CYL": RCYLUpdated, "AXIS": RAXUpdated, "PD": RPDUpdated, "ADD": RAddUpdated},
+	 				"left": {"SPH": LSPHUpdated, "CYL": LCYLUpdated, "AXIS": LAXUpdated, "PD": LPDUpdated, "ADD": LAddUpdated} 
+				}
+
+		tabData.unshift(obj)
+		console.log(tabData)
+		
+})
+var clicked = 0
+$('#update').click(function() {
+
+	$('#save').hide()
+	$('div#patientSheet').hide("");
+	$('div#details').hide("");
+
+
+		$('body').append('<div id ="listClient"></div>')
+		for(var i = 0; i< tabData.length ; i++){
+			//console.log(tabData[i]["info"]["first Name"])
+			$('#listClient').append('<div id= displayDetails'+i+'></div>')
+			$('#displayDetails'+i).append('<div classname ="name">'+ tabData[i]["info"]["first Name"] +'</div>')
+			$('#displayDetails'+i).append('<div classname ="lastName">'+ tabData[i]["info"]["lastName"] + '</div>')
+			$('#displayDetails'+i).append('<div classname ="email">'+ tabData[i]["info"]["email"] + '</div>')
+			$('#displayDetails'+i).append('<div classname ="date">'+ tabData[i]["info"]["date"] + '</div>')
+			$('#displayDetails'+i).append('<div classname ="phone">'+ tabData[i]["info"]["phoneNo"] + '</div>')
+			$('#displayDetails'+i).append('<hr>')
+
+	}
 
 }) 
 
+
 $('#searchBtn').click(function() {
+	$('div#listClient').remove()
+	$('a#save').show()
 
 	var searchItem = $('#searchInput').val();
 	//call the function search that return false whene not found and i whene we found keyword searched !
 	
-	if(typeof (search(clients,searchItem)) ==="number"){
-		var index = search(clients,searchItem)
+	if(typeof (search(tabData,searchItem)) === "number"){
 
-		//we can fuckin optimize tha shit !! but we don't have time  : todo !!
-		$('#firstNameInput').attr('value',clients[index]["info"]["firstName"])
-		$('#lastNameInput').attr('value',clients[index]["info"]["lastName"])
-		$('#dateOfBirthInput').attr('value',clients[index]["info"]["dateOfbirth"])
-		$('#phoneNumberInput').attr('value',clients[index]["info"]["phoneNo"])
-		$('#emailInput').attr('value',clients[index]["info"]["eMail"])
+		var index = search(tabData,searchItem)
+		console.log(index)
 
-		$('#R-SPH').attr('value',clients[index]["right"]["sph"])
-		$('#R-CYL').attr('value',clients[index]["right"]["cyl"])
-		$('#R-AX').attr('value',clients[index]["right"]["ax"])
-		$('#R-PD').attr('value',clients[index]["right"]["pd"])
-		$('#R-Addition').attr('value',clients[index]["right"]["add"])
+		//not the best solution 
+		$('#firstNameInput').attr('value',tabData[index]["info"]["first Name"])
+		$('#lastNameInput').attr('value',tabData[index]["info"]["lastName"])
+		$('#dateOfBirthInput').attr('value',tabData[index]["info"]["date"])
+		$('#phoneNumberInput').attr('value',tabData[index]["info"]["phoneNo"]) // add to data 
+		$('#emailInput').attr('value',tabData[index]["info"]["email"])
 
-		$('#L-SPH').attr('value',clients[index]["left"]["sph"])
-		$('#L-CYL').attr('value',clients[index]["left"]["cyl"])
-		$('#L-AX').attr('value',clients[index]["left"]["ax"])
-		$('#L-PD').attr('value',clients[index]["left"]["pd"])
-		$('#L-Addition').attr('value',clients[index]["left"]["add"])
+		$('#R-SPH').attr('value',tabData[index]["right"]["SPH"])
+		$('#R-CYL').attr('value',tabData[index]["right"]["CYL"])
+		$('#R-AX').attr('value',tabData[index]["right"]["AXIS"])
+		$('#R-PD').attr('value',tabData[index]["right"]["PD"])
+		$('#R-Addition').attr('value',tabData[index]["right"]["ADD"])
+
+		$('#L-SPH').attr('value',tabData[index]["left"]["SPH"])
+		$('#L-CYL').attr('value',tabData[index]["left"]["CYL"])
+		$('#L-AX').attr('value',tabData[index]["left"]["AXIS"])
+		$('#L-PD').attr('value',tabData[index]["left"]["PD"])
+		$('#L-Addition').attr('value',tabData[index]["left"]["ADD"])
 		$('div#details').show();
 		$('div#patientSheet').show();
+
+		/// 
+	}else{
+		alert('not match found !')
 	}
 
 });
@@ -173,48 +208,22 @@ $('#searchBtn').click(function() {
 
 function search(data, keyWord){
 	// feature to add a filter to search as a button scrolldown button  with hover event 
-	
 	// if we have time we will add regular expression 
 	for(var i=0 ; i< data.length ; i++){
-		console.log(data[i])
-		for (var key in data){
-			console.log(key)
-			if (keyWord === data[i]["info"]["lastName"] || keyWord === data[i]["info"]["phoneNo"]){
+		//console.log("--"+i,data[i])
+		var rowObj = data[i]
+		for (var key in rowObj){
+			//console.log(key)
+			if (keyWord === data[i]["info"]["lastName"] || keyWord == data[i]["info"]["phoneNo"]){
 				//function to display 
 				console.log("founed !")
-				return i
-				
-			}else{
-				console.log("not found !! ")
-				return false
+				return i	
 			}
 			//data['info']["lastName"] === keyWord
 		}
+
 	}
+	return false
 	
 }
 
-/*var clients = [
-{info:{
-		firstName: xxx,
-		lastNAme: xxx,
-		dateOfbirth: xxx,
-		phoneNo: xxx,
-		eMail: xxx,
-	},
-	right: {
-		sph: xxx,
-		cyl: xxx,
-		ax: xxx,
-		pd: xxx,
-		add: xxx
-	},
-	left: {
-		sph: xxx,
-		cyl: xxx,
-		ax: xxx,
-		pd: xxx,
-		add: xxx
-	},
-	dateRx: xxx }
-]*/
